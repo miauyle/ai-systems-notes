@@ -1,5 +1,10 @@
 # 更新记录
 
+## 2026-10-11 · iPhone Chrome 复用静态图标页面
+
+- 根据 iPhone Chrome 重新加载才更新图标的实测，将 CriOS 分流到现有 Safari 静态主题页面，不增加页面副本。
+- 电脑与 Android Chrome 保留现有动态图标路径；增加 iPhone Chrome 全配色导航回归及电脑／Android 分流检查，明确自动测试不验证浏览器标签栏。
+
 ## 2026-10-11 · Safari 静态配色图标页面
 
 - 四站统一按主题实际配色生成静态 HTML，Safari 在刷新或跨页时加载对应 hash PNG，Chrome 保留原地址和即时变色。
