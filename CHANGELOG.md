@@ -1,5 +1,11 @@
 # 更新记录
 
+## 2026-10-11 · Safari 静态配色图标页面
+
+- 四站统一按主题实际配色生成静态 HTML，Safari 在刷新或跨页时加载对应 hash PNG，Chrome 保留原地址和即时变色。
+- 清理无效的 Safari 解析时序补丁，不再使用 document.write；配色副本保留原 canonical，排除搜索与 sitemap。
+- 增加全页面／全配色覆盖、手机与桌面导航、无 JS、搜索动态链接及 iPhone Chrome 路由回归。
+
 ## 2026-10-10 · Safari 图标初始声明时序
 
 - 默认配色候选仅作回退，解析阶段先声明已保存主题的 hash PNG，减少 Safari 首次收集旧候选的窗口。
