@@ -60,6 +60,12 @@ flowchart TB
 
 Compiler、Platform 与 Performance 仍归入“推理与基础设施”，同时服务训练和生产章节；不新增第七个分组。它们描述通用执行关系，深入 KV 存储层级与 RDMA/GDS 等路径由[AI Storage Notes](https://miauyle.github.io/ai-storage-notes/)承接。
 
+## 近期机制如何接入原有主线
+
+混合架构与跨层复用由[06](06-modern-architectures.md)解释计算关系，[09](09-inference-and-memory.md)区分状态容量，[18](18-inference-engineering.md)处理分叉、重放、推测验证及批次不变性；DeepInfer 的发布边界回到[10](10-serving-and-distributed.md)的完整服务职责。它们不形成额外产品专题。
+
+长任务沿[20](20-agent-runtime.md)的 Harness/Session/Sandbox 分离进入[21](21-agent-planning-and-memory.md)的上下文交接，再由[22](22-evaluation-and-production.md)、[25](25-ai-security.md)判断轨迹、环境和动作边界。Agent 训练环境由[08](08-post-training.md)、[29](29-ai-platform-and-cluster-scheduling.md)衔接，流式多模态与推理预算归[13](13-multimodal-and-reasoning.md)，任务成本归[30](30-ai-systems-performance.md)。来源与核实时间见[References](references.md)。
+
 ## 基础与深入的分工
 
 | 基础专题 | 深入专题 | 增加的系统关系 |

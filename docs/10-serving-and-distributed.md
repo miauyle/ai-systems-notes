@@ -128,6 +128,14 @@ Fleet 是多个模型、副本和阶段池构成的服务集合。平台控制 m
 
 服务控制面只把真实 model-ready 的副本加入可路由集合，并在缩容时先撤销准入、处理已有请求所有权。冷启动、权重加载、autoscaling 与 drain 的主解释见[第 29 章](29-ai-platform-and-cluster-scheduling.md)；本章的交接协议决定活动请求能否迁移/续流，不能由删除副本代替。
 
+## DeepInfer 案例：引擎发布与完整服务的边界
+
+截至 2026-10-21，[DeepInfer 官方 README](https://github.com/deepseek-ai/DeepInfer)将本次发布定位为带规模化服务核心能力的离线推理框架，支持 DeepSeek-V4.1-Flash，列出的硬件为 NVIDIA SM100 与 Huawei Ascend 950。它来自生产服务，并不意味着本次代码已包含生产系统的全部组件。
+
+官方明确将 KV cache system、视觉编码（VE）/Prefill/Decode 阶段解耦，以及 Prefill、Decode 的 DP 副本负载均衡列为完整服务仍需补齐的部分。不能据此推断引擎不读写 KV；区别在于局部执行能力与完整缓存服务、阶段协调和集群控制面的交付范围。
+
+接入完整服务时，本章的准入、目标容量、状态交接、取消和输出所有权仍需落实。前处理或视觉编码单独成池后，还要将其产物、版本和就绪条件传给后续阶段。具体池划分取决于模型与部署，不将某个项目阶段名当作通用标准；引擎内部调度与状态管理见[第 18 章](18-inference-engineering.md)。
+
 ## 本库与 AI Storage 的分工
 
 本库解释 request lifecycle、scheduler、KV ownership、routing、Prefill / Decode、SLO 与 cluster-level serving。Remote KV / offload 的定义与本地执行接口由[第 18 章](18-inference-engineering.md)主责；本章消费其位置/就绪信号并维护请求交接。

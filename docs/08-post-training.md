@@ -97,6 +97,14 @@ Rollout throughput 很高，不代表单位成本产生了更多可用学习信�
 
 Trainer/rollout 分池、布局转换、权重发布与 checkpoint 的工程责任见[第 17 章](17-training-engineering.md)；观测关联见[第 31 章](31-ai-systems-observability-and-debugging.md)。一手系统实例：[HybridFlow](https://arxiv.org/abs/2409.19256)、[AReaL](https://arxiv.org/abs/2505.24298)；它们展示分离、同步或异步设计，不代表所有 RL 算法共享同一采样合同，也不将论文 speedup 当作普遍收益。
 
+## Agentic RL 的环境也会成为吞吐瓶颈
+
+带工具的 rollout 不只消耗 GPU：创建工作区、启动测试、等待服务和执行验证器都可能拖长轨迹。应区分等待模型、等待环境、工具运行和奖励就绪；只增加采样 GPU，可能增加环境队列而没有增加可用于更新的轨迹。
+
+[DSec 报告](https://arxiv.org/abs/2609.22978)将大规模 Agent 训练与评估的 sandbox 作为独立弹性基础设施。环境含有文件和进程等状态，其生命周期不能简单等同于某次 GPU 调用。平台资源与环境分发见[第 29 章](29-ai-platform-and-cluster-scheduling.md)，本章仍负责轨迹、策略版本与奖励语义。
+
+训练数据还需记录环境镜像、任务、测试与验证器版本。环境不可用应标成基础设施故障，不能统一记成模型失败；奖励规则也应检查是否意外鼓励越过任务边界。训练奖励与线上完成标准应相互校验，动作边界见[第 25 章](25-ai-security.md)。
+
 ## LoRA 怎样减少可训练状态
 
 对一层输入—输出方向为 `d_in → d_out` 的线性映射，一种写法是冻结原始 W，仅学习低秩增量：

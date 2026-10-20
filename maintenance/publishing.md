@@ -36,6 +36,8 @@ python tools/check_site.py
 NODE_PATH=/tmp/ai-systems-site-deps/node_modules node tools/check_site_ui.cjs
 ```
 
+CI 构建使用 Ubuntu 24.04，与固定的 Playwright 1.51.1 浏览器依赖保持兼容；不随 `ubuntu-latest` 自动迁移操作系统。
+
 源检查验证章节与导航；产物检查验证路由、子路径、链接锚点、编辑入口及完整搜索索引。Chromium 访问全部知识页，真实渲染公式与图，检查英文/中文搜索、键盘导航、模式持久化、图的模式更新、320/390px 阅读与移动目录。`site-qa/` 保存截图和 JSON 报告；它不是知识正文或学习任务。
 
 ## 发布与权限

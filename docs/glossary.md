@@ -150,3 +150,15 @@
 | Compiled artifact / running replica | 有适用条件的执行产物 / 具体资源上的运行实例；二者都不同于 checkpoint | [28](28-ai-compiler-and-runtime.md)、[14](14-end-to-end-case.md) |
 | Model Ready / SLO-ready | 模型执行路径就绪 / 约定负载下通过服务目标验收；Pod Running 不能替代 | [29](29-ai-platform-and-cluster-scheduling.md)、[14](14-end-to-end-case.md) |
 | Application / cluster / inference scheduler | 分别调度 Task/Tool、GPU/Replica、Token/KV；Router 另选择请求落点 | [14](14-end-to-end-case.md) |
+
+## 混合状态与长任务执行
+
+| 术语 | 含义与边界 | 正文 |
+| --- | --- | --- |
+| Gated Delta Network | 门控与增量更新的递归状态模块，可与 Attention、MoE 组合 | [06](06-modern-architectures.md) |
+| CED / CSA2 | 具体模型中的阶段分工 / 压缩稀疏注意力与跨层复用设计，不是通用缓存开关 | [06](06-modern-architectures.md) |
+| SWA bounded replay | 有限后缀近似恢复滑窗状态；不保证完整前向等价 | [18](18-inference-engineering.md) |
+| Confidence-scheduled verification | 依据草稿接受概率估计与引擎特征分配验证长度，仍需目标验证 | [18](18-inference-engineering.md) |
+| Batch-invariant inference | 约束请求在不同组批下的计算结果；不同于固定采样种子 | [18](18-inference-engineering.md) |
+| Harness / Session / Sandbox | 执行控制框架 / 持久事件记录 / 工具执行环境，具有不同生命周期 | [20](20-agent-runtime.md) |
+| Compaction / context reset | 压缩当前上下文 / 重建输入视图继续任务，都需可靠交接记录 | [21](21-agent-planning-and-memory.md) |
