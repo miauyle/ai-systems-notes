@@ -237,3 +237,22 @@ SP 命名在不同论文中不完全一致，应核对实际算法。DCP 的支�
 | [NIST AI RMF](https://www.nist.gov/itl/ai-risk-management-framework) | 系统风险与治理关系 |
 
 对应正文：[模型生命周期](26-model-lifecycle.md)、[计算基础设施](27-compute-infrastructure.md)、[安全边界](25-ai-security.md)。这些入口的存在不代表所有平台组合都受支持，部署时仍须核对实际版本。
+
+## 2026 年机制演进与官方案例
+
+2026-10-21 查阅以下官方仓库、论文和发布说明，补充现有章节；覆盖 2—10 月的机制演进，重点包含近期 8—10 月资料，不声称每项都是本月新技术。动态仓库按核实日期描述，部署需另固定 commit、模型与环境版本；未运行这些模型、复现性能或逐一复查全部历史外链。
+
+| 原始资料 | 日期 / 范围 | 支持的更新与章节 |
+| --- | --- | --- |
+| [Qwen3.5—3.8 官方仓库](https://github.com/QwenLM/Qwen3.8) | 2026；3.8 开放模型 8 月发布 | 混合状态、推理投入与历史 thinking，[06](06-modern-architectures.md)、[13](13-multimodal-and-reasoning.md) |
+| [DeepSeek-V4.1-Flash](https://arxiv.org/abs/2609.19969)、[正文](https://arxiv.org/html/2609.19969v1) | 2026-09；架构与第 3.2 节 | CED、CSA2 与近似 bounded replay，[06](06-modern-architectures.md)、[18](18-inference-engineering.md) |
+| [DeepInfer README](https://github.com/deepseek-ai/DeepInfer) | 2026-10-21 查阅 | 离线引擎与完整服务边界、异步调度、确定性条件，[10](10-serving-and-distributed.md)、[18](18-inference-engineering.md)、[28](28-ai-compiler-and-runtime.md) |
+| [FlashMLA](https://github.com/deepseek-ai/FlashMLA)、[DeepGEMM](https://github.com/deepseek-ai/DeepGEMM)、[DeepEP](https://github.com/deepseek-ai/DeepEP)、[TileLang](https://github.com/tile-ai/tilelang) | 官方实现；具体版本各异 | 专用内核、通信与 DSL 的职责，[28](28-ai-compiler-and-runtime.md) |
+| [DSpark](https://arxiv.org/abs/2607.05147)、[DeepSpec](https://github.com/deepseek-ai/DeepSpec) | 论文 2026-07；实现按查阅日 | 草稿训练、验证长度与负载，[18](18-inference-engineering.md) |
+| [DSec](https://arxiv.org/abs/2609.22978) | 2026-09 | Agent 训练环境池与生命周期，[08](08-post-training.md)、[29](29-ai-platform-and-cluster-scheduling.md) |
+| [Managed Agents](https://www.anthropic.com/engineering/managed-agents) | 2026-04-08 | Harness、Session、Sandbox 分离，[20](20-agent-runtime.md) |
+| [长应用开发 Harness](https://www.anthropic.com/engineering/harness-design-long-running-apps) | 2026-03-24 | 交接、重置与模型适配，[21](21-agent-planning-and-memory.md) |
+| [基础设施噪声与 Agent 评估](https://www.anthropic.com/engineering/infrastructure-noise) | 2026-02-05 | 环境配置与比较口径，[22](22-evaluation-and-production.md) |
+| [非预期模型动作调查](https://www.anthropic.com/research/investigating-unintended-model-actions) | 2026-10-09；10-12 更正 | 环境阻塞与动作边界，[25](25-ai-security.md) |
+| [Qwen3.8-LiveTranslate](https://qwen.ai/blog?id=qwen3.8-livetranslate) | 2026-09-18 | 音频文本交错与流式状态，[13](13-multimodal-and-reasoning.md) |
+| [MiniMax M3.1 Flash](https://www.minimax.io/blog/minimax-m31f)、[Gemini 4 Argon 开发者发布](https://blog.google/innovation-and-ai/technology/developers-tools/build-with-gemini-4-argon/) | 2026-10-19 / 10-13 | 任务成本与发布边界案例；不推断内部架构，[30](30-ai-systems-performance.md) |

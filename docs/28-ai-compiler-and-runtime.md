@@ -102,6 +102,21 @@ CUDA 是编程与执行平台，CUDA C++ 是编写设备程序的一条路径。
 
 FlashAttention 是 IO-aware 的精确 Attention 算法与其高效 Kernel 实现家族。它通过分块、在线归一化和局部复用，避免将完整注意力分数矩阵反复写回 HBM；保留 Attention 数学关系，但浮点顺序可能不同。它可以有 CUDA 或 Triton 实现，可以被框架算子或 Compiler 选用，不等于一种模型架构，也不等于通用编译器自动完成的一切融合。[第 16 章](16-transformer-implementation.md)展开其信息流；依据：[FlashAttention](https://arxiv.org/abs/2205.14135)、[Triton 官方文档](https://triton-lang.org/main/index.html)。
 
+## 专用内核与 DSL 怎样拼成执行栈
+
+模型前向往往调用多种专用实现，而非只经过一个通用 Compiler。[DeepInfer](https://github.com/deepseek-ai/DeepInfer)列出的依赖包括 FlashMLA、DeepGEMM、DeepEP、TileKernels、DeepSelect 与自定义 TileLang 内核。它们在执行中承担不同职责：
+
+| 层次 | 代表入口 | 接入时关心的合同 |
+| --- | --- | --- |
+| 注意力内核 | [FlashMLA](https://github.com/deepseek-ai/FlashMLA) | 查询、缓存表示与索引怎样匹配 |
+| 矩阵计算 | [DeepGEMM](https://github.com/deepseek-ai/DeepGEMM) | 精度、尺度、矩阵布局与分组形态 |
+| MoE 通信 | [DeepEP](https://github.com/deepseek-ai/DeepEP) | 专家 dispatch/combine、映射与完成依赖 |
+| 内核描述与生成 | [TileLang](https://github.com/tile-ai/tilelang) | 分块程序、backend、编译条件与生成代码 |
+
+内核升级也可能改变缓存合同：[FlashMLA 的 2026-09-30 兼容性公告](https://github.com/deepseek-ai/FlashMLA)说明该次更新移除 Hopper 和前代模型支持，并更改 FP8/FP4 KV 格式。已有缓存与旧执行路径不能仅凭名称相同继续复用；升级需一起固定模型、内核、缓存格式和硬件组合，失配时重新计算或采用兼容版本。
+
+使用同一种 DSL 不保证所有硬件共享相同性能、数值或特性。模型 runtime 仍负责把实际输入送到受支持的内核，连接通信与计算依赖，提供必要回退；专用 Kernel 也不代替集群路由或缓存服务。项目支持组合会变化，以上按 2026-10-21 官方发布入口记录，不构成安装或性能保证。
+
 ## 相同模型为何有不同系统性能
 
 本章产生的图、guard、代码/库选择与缓冲计划会改变相同模型的执行。应记录 graph break、guard 失配/重新编译、编译缓存命中及产物版本；如何把这些事件关联到 CPU/GPU timeline、识别碎 Kernel 和提交等待，由[第 31 章](31-ai-systems-observability-and-debugging.md)主责。

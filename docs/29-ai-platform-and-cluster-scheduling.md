@@ -115,6 +115,14 @@ Autoscaling 根据队列、长度分布、TTFT/ITL、容量和上述启动时间
 
 服务缩容先从可接请求集合摘除，等待 drain，再释放设备；已有请求若要迁移，需要[第 10 章](10-serving-and-distributed.md)的所有权协议。P/D pool 分别扩容却必须平衡生产与消费，避免 Prefill 产出的 KV 堆积。机制入口：[InferencePool](https://gateway-api-inference-extension.sigs.k8s.io/api-types/inferencepool/)。
 
+## Agent 环境池与 GPU pool 的生命周期不同
+
+工具执行会消耗 CPU、内存、磁盘和外部连接，并可能在等待下一轮模型时保留工作区。把每个有状态环境长期绑定一个 GPU slot，会让一方等待时另一方也被占住；无条件回收环境又可能破坏 rollout。平台需要分别追踪环境租约、工作区状态、模型排队与训练可恢复点。
+
+[DSec（2026-09）](https://arxiv.org/abs/2609.22978)公开统一管理函数调用、容器、microVM 和 VM 等环境后端，采用分层环境与从 3FS 按需读取镜像数据。这里的实例说明隔离、启动和数据供给需要共同调度；不表示不同后端具有相同隔离强度，也不表示报告中的规模是可直接迁移的容量指标。
+
+环境的暂停、保留与销毁要由任务状态驱动：等待模型不等于环境已无价值，工具超时不等于进程已停止。调度前核对镜像、资源与隔离要求；恢复后核对持久文件和未决操作。应记录环境启动尾延迟、活跃/等待数量、数据缺页读取、工具和验证器积压，区分这些瓶颈与 GPU 饱和。轨迹可训练性仍由[后训练](08-post-training.md)判定，业务恢复由[运行时](20-agent-runtime.md)负责。
+
 ## Storage、network 与 GPU 的联合预算
 
 训练输入不足会使 GPU 饿死，checkpoint 持久提交会争用 I/O；模型冷启动争用权重存储，P/D transfer 争用网络；TP/CP/EP 又可能同时使用 NIC。GPU 容量够用，不代表这些数据路径满足时限。
